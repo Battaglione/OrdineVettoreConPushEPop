@@ -6,28 +6,32 @@ TITLE ciclo while do
 .MODEL SMALL    
     
 .DATA 
-    LETTERE DB 'ZYXWVUTSRQPONMLKJIHGFEDCBA$'
+    LETTERE DW 'ZYXWVUTSRQPONMLKJIHGFEDCBA$'
+    CONT    DW 0
 
 .CODE                                                                                                
 
 .STARTUP
     LEA SI,LETTERE
-    MOV CX,0
 INIZIO:    
     MOV BX,[SI]
-    CMP BX,24h 
-    JE STAMPA
+    CMP BX,'$' 
+    JE RESET
     PUSH BX
     INC SI 
-    INC CX
+    INC CONT 
     JMP INIZIO
+RESET:
+    MOV CX,CONT
+    JMP STAMPA
 STAMPA:
     POP BX
-    MOV AH,02h
     MOV DX,BX
+    MOV AH,02h
     INT 21h
     INC SI
     LOOP STAMPA
+    JMP FINE
            
 FINE:
 ; exit to operating system. 
